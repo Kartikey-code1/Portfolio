@@ -1,20 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Volume2, VolumeX } from 'lucide-react';
+import { motion } from 'motion/react';
 
 const VIDEO_SRC = '/images/kartikey-speaking.mp4';
 
 export const SpeakingCharacterStage: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
-
   const [isReady, setIsReady] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [audioBlocked, setAudioBlocked] = useState(false);
-  const [introFinished, setIntroFinished] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
-
     if (!video) return;
 
     video.currentTime = 0;
@@ -25,38 +20,8 @@ export const SpeakingCharacterStage: React.FC = () => {
     video.muted = false;
     video.volume = 1;
 
-    const attemptAutoplay = async () => {
-      try {
-        video.currentTime = 0;
-        video.muted = false;
-        video.volume = 1;
-
-        await video.play();
-
-        // Audio autoplay was successfully allowed.
-        setAudioBlocked(false);
-      } catch {
-        /*
-         * Browser blocked unmuted autoplay.
-         *
-         * We do NOT listen for random clicks anymore.
-         * Instead, we show an explicit "ENABLE INTRO" button.
-         */
-        setAudioBlocked(true);
-
-        try {
-          // Keep the visual intro playing silently.
-          video.muted = true;
-          await video.play();
-        } catch {
-          // Browser may block autoplay completely.
-        }
-      }
-    };
-
     const handleLoaded = () => {
       setIsReady(true);
-      attemptAutoplay();
     };
 
     const handlePlay = () => {
@@ -69,51 +34,51 @@ export const SpeakingCharacterStage: React.FC = () => {
 
     const handleEnded = () => {
       setIsSpeaking(false);
-      setIntroFinished(true);
+    };
+
+    const playIntro = async () => {
+      try {
+        video.currentTime = 0;
+        video.muted = false;
+        video.volume = 1;
+        await video.play();
+      } catch {
+        try {
+          video.currentTime = 0;
+          video.muted = true;
+          await video.play();
+        } catch {}
+      }
+    };
+
+    // Hero button se intro play karne ke liye
+    const handleIntroRequest = () => {
+      playIntro();
     };
 
     if (video.readyState >= 2) {
       setIsReady(true);
-      attemptAutoplay();
-    } else {
-      video.addEventListener('loadeddata', handleLoaded);
     }
 
+    video.addEventListener('loadeddata', handleLoaded);
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
     video.addEventListener('ended', handleEnded);
+
+    window.addEventListener('kartikey-play-intro', handleIntroRequest);
 
     return () => {
       video.removeEventListener('loadeddata', handleLoaded);
       video.removeEventListener('play', handlePlay);
       video.removeEventListener('pause', handlePause);
       video.removeEventListener('ended', handleEnded);
+
+      window.removeEventListener(
+        'kartikey-play-intro',
+        handleIntroRequest
+      );
     };
   }, []);
-
-  const enableIntroAudio = async () => {
-    const video = videoRef.current;
-
-    if (!video) return;
-
-    try {
-      video.pause();
-      video.currentTime = 0;
-
-      video.muted = false;
-      video.volume = 1;
-
-      setIntroFinished(false);
-      setAudioBlocked(false);
-
-      await video.play();
-    } catch {
-      /*
-       * If playback still fails, keep the button visible.
-       */
-      setAudioBlocked(true);
-    }
-  };
 
   return (
     <motion.div
@@ -141,10 +106,7 @@ export const SpeakingCharacterStage: React.FC = () => {
         overflow-visible
       "
     >
-      {/* ---------------------------------------------------------
-          BACKGROUND GLOW
-      --------------------------------------------------------- */}
-
+      {/* Atmospheric glow */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -155,20 +117,37 @@ export const SpeakingCharacterStage: React.FC = () => {
         className="
           pointer-events-none
           absolute
-          right-[5%]
-          top-[25%]
-          h-[45%]
-          w-[45%]
+          right-[8%]
+          top-[28%]
+          h-[42%]
+          w-[38%]
           rounded-full
-          bg-emerald-400/[0.04]
-          blur-[130px]
+          bg-emerald-400/[0.055]
+          blur-[120px]
         "
       />
 
-      {/* ---------------------------------------------------------
-          CHARACTER VIDEO
-      --------------------------------------------------------- */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          delay: 0.8,
+          duration: 1.5,
+        }}
+        className="
+          pointer-events-none
+          absolute
+          right-[20%]
+          top-[32%]
+          h-[28%]
+          w-[18%]
+          rounded-full
+          bg-cyan-400/[0.025]
+          blur-[90px]
+        "
+      />
 
+      {/* Video */}
       <motion.div
         initial={{
           opacity: 0,
@@ -196,7 +175,6 @@ export const SpeakingCharacterStage: React.FC = () => {
         <video
           ref={videoRef}
           src={VIDEO_SRC}
-          autoPlay
           playsInline
           preload="auto"
           controls={false}
@@ -205,39 +183,31 @@ export const SpeakingCharacterStage: React.FC = () => {
           className="
             absolute
             bottom-[-5%]
-            right-[-4%]
+            left-1/2
             h-[120%]
             w-auto
             max-w-none
+            -translate-x-1/2
             object-contain
             object-center
           "
           style={{
             WebkitMaskImage:
-              'radial-gradient(ellipse 62% 72% at 50% 46%, black 0%, black 50%, rgba(0,0,0,.95) 61%, rgba(0,0,0,.65) 74%, rgba(0,0,0,.22) 88%, transparent 100%)',
-
+              'radial-gradient(ellipse 67% 74% at 50% 43%, black 0%, black 57%, rgba(0,0,0,.92) 69%, rgba(0,0,0,.55) 80%, transparent 96%)',
             maskImage:
-              'radial-gradient(ellipse 62% 72% at 50% 46%, black 0%, black 50%, rgba(0,0,0,.95) 61%, rgba(0,0,0,.65) 74%, rgba(0,0,0,.22) 88%, transparent 100%)',
-
-            WebkitMaskRepeat: 'no-repeat',
-            maskRepeat: 'no-repeat',
-
-            WebkitMaskSize: '100% 100%',
-            maskSize: '100% 100%',
+              'radial-gradient(ellipse 67% 74% at 50% 43%, black 0%, black 57%, rgba(0,0,0,.92) 69%, rgba(0,0,0,.55) 80%, transparent 96%)',
           }}
           onLoadedData={() => setIsReady(true)}
         />
 
-        {/* Bottom blend */}
-
+        {/* Bottom fade */}
         <div
           className="
             pointer-events-none
             absolute
+            inset-x-0
             bottom-0
-            left-0
-            right-0
-            h-[20%]
+            h-[19%]
             bg-gradient-to-t
             from-[#050505]
             via-[#050505]/45
@@ -246,227 +216,78 @@ export const SpeakingCharacterStage: React.FC = () => {
         />
       </motion.div>
 
-      {/* ---------------------------------------------------------
-          ENABLE INTRO BUTTON
-          Only appears when browser blocks autoplay audio.
-      --------------------------------------------------------- */}
+      {/* Tiny intro activity indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: isSpeaking ? 1 : 0.3,
+        }}
+        transition={{
+          duration: 0.4,
+        }}
+        className="
+          absolute
+          bottom-[15%]
+          right-[13%]
+          z-30
+          flex
+          items-center
+          gap-2
+        "
+      >
+        <span
+          className="
+            font-mono-tech
+            text-[7px]
+            uppercase
+            tracking-[0.35em]
+            text-white/30
+          "
+        >
+          INTRO
+        </span>
 
-      <AnimatePresence>
-        {audioBlocked && !introFinished && (
-          <motion.button
-            type="button"
-            onClick={enableIntroAudio}
-            initial={{
-              opacity: 0,
-              y: 12,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            exit={{
-              opacity: 0,
-              y: 8,
-            }}
-            transition={{
-              duration: 0.45,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className="
-              group
-              absolute
-              bottom-[10%]
-              right-[10%]
-              z-40
-              flex
-              items-center
-              gap-3
-              border
-              border-emerald-400/30
-              bg-[#050505]/80
-              px-4
-              py-3
-              backdrop-blur-xl
-              transition-all
-              duration-300
-              hover:border-emerald-400/70
-              hover:bg-emerald-400/[0.08]
-            "
-          >
-            {/* Pulse */}
-
-            <span className="relative flex h-2 w-2">
-              <span
-                className="
-                  absolute
-                  inline-flex
-                  h-full
-                  w-full
-                  animate-ping
-                  rounded-full
-                  bg-emerald-400
-                  opacity-60
-                "
-              />
-
-              <span
-                className="
-                  relative
-                  inline-flex
-                  h-2
-                  w-2
-                  rounded-full
-                  bg-emerald-400
-                "
-              />
-            </span>
-
-            <span
+        <div className="flex items-end gap-[2px]">
+          {[1, 2, 3, 4].map((bar) => (
+            <motion.span
+              key={bar}
+              animate={
+                isSpeaking
+                  ? {
+                      height: [
+                        '3px',
+                        `${4 + bar * 2}px`,
+                        '3px',
+                      ],
+                    }
+                  : {
+                      height: '3px',
+                    }
+              }
+              transition={
+                isSpeaking
+                  ? {
+                      duration: 0.45,
+                      repeat: Infinity,
+                      delay: bar * 0.08,
+                      ease: 'easeInOut',
+                    }
+                  : {
+                      duration: 0.2,
+                    }
+              }
               className="
-                font-mono-tech
-                text-[8px]
-                font-medium
-                uppercase
-                tracking-[0.28em]
-                text-white/70
-                transition-colors
-                group-hover:text-emerald-300
-              "
-            >
-              ENABLE INTRO
-            </span>
-
-            <Volume2
-              size={13}
-              strokeWidth={1.5}
-              className="
-                text-emerald-400/70
-                transition-transform
-                duration-300
-                group-hover:scale-110
+                block
+                w-[2px]
+                rounded-full
+                bg-emerald-400/70
               "
             />
-          </motion.button>
-        )}
-      </AnimatePresence>
+          ))}
+        </div>
+      </motion.div>
 
-      {/* ---------------------------------------------------------
-          AUDIO INDICATOR
-      --------------------------------------------------------- */}
-
-      <AnimatePresence>
-        {isSpeaking && !introFinished && (
-          <motion.div
-            initial={{
-              opacity: 0,
-              y: 4,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            exit={{
-              opacity: 0,
-              y: 4,
-            }}
-            className="
-              absolute
-              bottom-[15%]
-              right-[13%]
-              z-30
-              flex
-              items-center
-              gap-2
-            "
-          >
-            <span
-              className="
-                font-mono-tech
-                text-[7px]
-                uppercase
-                tracking-[0.35em]
-                text-white/30
-              "
-            >
-              INTRO
-            </span>
-
-            <div className="flex items-end gap-[2px]">
-              {[1, 2, 3, 4].map((bar) => (
-                <motion.span
-                  key={bar}
-                  animate={{
-                    height: [
-                      '3px',
-                      `${4 + bar * 2}px`,
-                      '3px',
-                    ],
-                  }}
-                  transition={{
-                    duration: 0.45,
-                    repeat: Infinity,
-                    delay: bar * 0.08,
-                    ease: 'easeInOut',
-                  }}
-                  className="
-                    block
-                    w-[2px]
-                    rounded-full
-                    bg-emerald-400/70
-                  "
-                />
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ---------------------------------------------------------
-          AUDIO BLOCKED MICRO STATUS
-      --------------------------------------------------------- */}
-
-      <AnimatePresence>
-        {audioBlocked && !isSpeaking && !introFinished && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="
-              pointer-events-none
-              absolute
-              bottom-[5.5%]
-              right-[10%]
-              z-30
-              flex
-              items-center
-              gap-2
-            "
-          >
-            <VolumeX
-              size={10}
-              strokeWidth={1.5}
-              className="text-white/20"
-            />
-
-            <span
-              className="
-                font-mono-tech
-                text-[6px]
-                uppercase
-                tracking-[0.28em]
-                text-white/20
-              "
-            >
-              AUDIO BLOCKED BY BROWSER
-            </span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ---------------------------------------------------------
-          SIDE LABEL
-      --------------------------------------------------------- */}
-
+      {/* Vertical editorial label */}
       <div
         className="
           pointer-events-none
@@ -488,10 +309,7 @@ export const SpeakingCharacterStage: React.FC = () => {
         PERSONAL PORTFOLIO // 001
       </div>
 
-      {/* ---------------------------------------------------------
-          SIDE LINE
-      --------------------------------------------------------- */}
-
+      {/* Vertical accent line */}
       <motion.div
         initial={{ scaleY: 0 }}
         animate={{ scaleY: 1 }}
@@ -515,26 +333,18 @@ export const SpeakingCharacterStage: React.FC = () => {
         "
       />
 
-      {/* ---------------------------------------------------------
-          LOADING COVER
-      --------------------------------------------------------- */}
-
-      <AnimatePresence>
-        {!isReady && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.45 }}
-            className="
-              pointer-events-none
-              absolute
-              inset-0
-              z-50
-              bg-[#050505]
-            "
-          />
-        )}
-      </AnimatePresence>
+      {/* Loading state */}
+      {!isReady && (
+        <div
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            z-50
+            bg-[#050505]
+          "
+        />
+      )}
     </motion.div>
-);
+  );
 };

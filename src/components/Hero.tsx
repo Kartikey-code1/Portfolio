@@ -1,15 +1,11 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import {
-  Activity,
   ArrowDown,
   ArrowUpRight,
-  BarChart3,
-  Braces,
-  Database,
   Github,
   Linkedin,
-  Terminal,
+  Play,
 } from 'lucide-react';
 import { SpeakingCharacterStage } from './SpeakingCharacterStage';
 
@@ -22,6 +18,10 @@ export const Hero: React.FC<HeroProps> = ({
   onExploreClick,
   onConnectClick,
 }) => {
+  const playIntro = () => {
+    window.dispatchEvent(new Event('kartikey-play-intro'));
+  };
+
   return (
     <section
       id="hero"
@@ -41,14 +41,14 @@ export const Hero: React.FC<HeroProps> = ({
         <div
           className="
             absolute
-            left-[42%]
-            top-[35%]
-            h-[700px]
-            w-[700px]
+            left-[50%]
+            top-[38%]
+            h-[650px]
+            w-[650px]
             -translate-x-1/2
             rounded-full
             bg-emerald-400/[0.045]
-            blur-[170px]
+            blur-[160px]
           "
         />
 
@@ -56,16 +56,16 @@ export const Hero: React.FC<HeroProps> = ({
           className="
             absolute
             right-[-15%]
-            top-[15%]
-            h-[550px]
-            w-[550px]
+            top-[20%]
+            h-[500px]
+            w-[500px]
             rounded-full
             bg-cyan-400/[0.025]
-            blur-[160px]
+            blur-[150px]
           "
         />
 
-        {/* technical grid */}
+        {/* Technical grid */}
         <div
           className="
             absolute
@@ -76,14 +76,16 @@ export const Hero: React.FC<HeroProps> = ({
           "
         />
 
+        {/* Cinematic vignette */}
         <div
           className="
             absolute
             inset-0
-            bg-[radial-gradient(circle_at_50%_45%,transparent_15%,#050505_88%)]
+            bg-[radial-gradient(circle_at_50%_45%,transparent_20%,#050505_88%)]
           "
         />
 
+        {/* Bottom fade */}
         <div
           className="
             absolute
@@ -129,7 +131,7 @@ export const Hero: React.FC<HeroProps> = ({
           "
         >
           {/* =====================================================
-              LEFT — NAME + TECH SYSTEM
+              LEFT — NAME + CONTENT
           ====================================================== */}
 
           <div
@@ -139,126 +141,7 @@ export const Hero: React.FC<HeroProps> = ({
               lg:col-span-7
             "
           >
-            {/* =================================================
-                TECHNICAL HUD BEHIND NAME
-            ================================================== */}
-
-            <div
-              className="
-                pointer-events-none
-                absolute
-                -left-8
-                -top-16
-                hidden
-                h-[470px]
-                w-[760px]
-                lg:block
-              "
-            >
-              {/* large technical grid */}
-              <div
-                className="
-                  absolute
-                  inset-0
-                  opacity-[0.055]
-                  [background-size:38px_38px]
-                  [background-image:linear-gradient(to_right,rgba(52,211,153,.7)_1px,transparent_1px),linear-gradient(to_bottom,rgba(52,211,153,.7)_1px,transparent_1px)]
-                "
-                style={{
-                  maskImage:
-                    'linear-gradient(to bottom, transparent, black 18%, black 72%, transparent)',
-                  WebkitMaskImage:
-                    'linear-gradient(to bottom, transparent, black 18%, black 72%, transparent)',
-                }}
-              />
-
-              {/* horizontal scanning line */}
-              <motion.div
-                animate={{
-                  y: [30, 400, 30],
-                  opacity: [0, 0.35, 0],
-                }}
-                transition={{
-                  duration: 7,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-                className="
-                  absolute
-                  left-0
-                  right-0
-                  h-px
-                  bg-gradient-to-r
-                  from-transparent
-                  via-emerald-400
-                  to-transparent
-                "
-              />
-
-              {/* vertical accent */}
-              <div
-                className="
-                  absolute
-                  left-[28%]
-                  top-0
-                  h-full
-                  w-px
-                  bg-gradient-to-b
-                  from-transparent
-                  via-emerald-400/[0.12]
-                  to-transparent
-                "
-              />
-
-              {/* corner frame */}
-              <div className="absolute left-5 top-12 h-20 w-20 border-l border-t border-emerald-400/20" />
-
-              <div className="absolute bottom-8 right-12 h-16 w-16 border-b border-r border-emerald-400/15" />
-
-              {/* node */}
-              <motion.div
-                animate={{
-                  opacity: [0.25, 1, 0.25],
-                  scale: [0.8, 1, 0.8],
-                }}
-                transition={{
-                  duration: 2.2,
-                  repeat: Infinity,
-                }}
-                className="
-                  absolute
-                  left-[28%]
-                  top-[31%]
-                  h-1.5
-                  w-1.5
-                  rounded-full
-                  bg-emerald-400
-                  shadow-[0_0_15px_rgba(52,211,153,.8)]
-                "
-              />
-
-              {/* connection lines */}
-              <div className="absolute left-[28%] top-[31%] h-px w-32 bg-gradient-to-r from-emerald-400/40 to-transparent" />
-
-              <div className="absolute left-[28%] top-[31%] h-20 w-px bg-gradient-to-b from-emerald-400/25 to-transparent" />
-
-              {/* tiny data labels */}
-              <div className="absolute left-[35%] top-[24%] font-mono-tech text-[6px] tracking-[0.3em] text-emerald-400/30">
-                DATA_NODE_01
-              </div>
-
-              <div className="absolute left-[8%] bottom-[18%] font-mono-tech text-[6px] tracking-[0.28em] text-zinc-700">
-                26.8467° N / 80.9462° E
-              </div>
-
-              <div className="absolute right-[12%] top-[18%] font-mono-tech text-[6px] tracking-[0.28em] text-zinc-700">
-                SYSTEM / ANALYTICS
-              </div>
-            </div>
-
-            {/* =================================================
-                INTRO
-            ================================================== */}
+            {/* INTRO LABEL */}
 
             <motion.div
               initial={{
@@ -273,7 +156,6 @@ export const Hero: React.FC<HeroProps> = ({
                 duration: 0.7,
               }}
               className="
-                relative
                 mb-6
                 flex
                 items-center
@@ -303,232 +185,84 @@ export const Hero: React.FC<HeroProps> = ({
                   text-zinc-700
                 "
               >
-                
+                KARTIKEY SINGH
               </span>
             </motion.div>
 
             {/* =================================================
-                SMALL TECH LABEL ABOVE NAME
+                KARTIKEY
             ================================================== */}
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.35, duration: 0.8 }}
+            <motion.h1
+              initial={{
+                opacity: 0,
+                x: -45,
+              }}
+              animate={{
+                opacity: 1,
+                x: 0,
+              }}
+              transition={{
+                duration: 1,
+                delay: 0.08,
+                ease: [0.16, 1, 0.3, 1],
+              }}
               className="
                 relative
-                mb-3
-                hidden
-                items-center
-                gap-3
-                lg:flex
+                whitespace-nowrap
+                font-display
+                text-[17vw]
+                font-black
+                leading-[0.68]
+                tracking-[-0.085em]
+                text-white
+                sm:text-[15vw]
+                lg:text-[9.1vw]
               "
             >
-              <div className="flex items-center gap-1.5">
-                <span className="h-1 w-1 rounded-full bg-emerald-400" />
-                <span className="h-1 w-1 rounded-full bg-emerald-400/40" />
-                <span className="h-1 w-1 rounded-full bg-emerald-400/15" />
-              </div>
-
-              <span className="font-mono-tech text-[6px] uppercase tracking-[0.4em] text-zinc-700">
-                ANALYTICS_INTERFACE // ONLINE
-              </span>
-
-              <span className="h-px w-16 bg-white/[0.06]" />
-            </motion.div>
-
-            {/* =================================================
-                KARTIKEY
-            ================================================== */}
-
-            <div className="relative">
-              {/* ghost code behind name */}
-              <div
-                aria-hidden="true"
-                className="
-                  pointer-events-none
-                  absolute
-                  -left-2
-                  top-[-35px]
-                  select-none
-                  font-mono-tech
-                  text-[7px]
-                  leading-4
-                  tracking-[0.18em]
-                  text-emerald-400/[0.09]
-                "
-              >
-                {'<DATA_ANALYST>'}
-                <br />
-                {'SELECT * FROM insights'}
-                <br />
-                {'WHERE signal = TRUE;'}
-              </div>
-
-              <motion.h1
-                initial={{
-                  opacity: 0,
-                  x: -45,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                transition={{
-                  duration: 1,
-                  delay: 0.08,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="
-                  relative
-                  whitespace-nowrap
-                  font-display
-                  text-[17vw]
-                  font-black
-                  leading-[0.68]
-                  tracking-[-0.085em]
-                  text-white
-                  sm:text-[15vw]
-                  lg:text-[9.1vw]
-                "
-              >
-                KARTIKEY
-              </motion.h1>
-
-              {/* tiny line attached to name */}
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: 70 }}
-                transition={{ delay: 0.9, duration: 0.7 }}
-                className="
-                  absolute
-                  bottom-[-12px]
-                  left-[2%]
-                  h-px
-                  bg-gradient-to-r
-                  from-emerald-400
-                  to-transparent
-                "
-              />
-            </div>
+              KARTIKEY
+            </motion.h1>
 
             {/* =================================================
                 SINGH
             ================================================== */}
 
-            <div className="relative">
-              <motion.h1
-                initial={{
-                  opacity: 0,
-                  x: -45,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                transition={{
-                  duration: 1,
-                  delay: 0.16,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="
-                  relative
-                  ml-[6vw]
-                  mt-2
-                  whitespace-nowrap
-                  font-display
-                  text-[17vw]
-                  font-black
-                  leading-[0.68]
-                  tracking-[-0.085em]
-                  text-transparent
-                  [-webkit-text-stroke:1px_rgba(255,255,255,0.62)]
-                  sm:text-[15vw]
-                  lg:ml-[4vw]
-                  lg:text-[9.1vw]
-                "
-              >
-                SINGH
-              </motion.h1>
-
-              {/* tech index beside SINGH */}
-              <div
-                className="
-                  absolute
-                  right-[2%]
-                  top-1/2
-                  hidden
-                  -translate-y-1/2
-                  items-center
-                  gap-2
-                  lg:flex
-                "
-              >
-                <span className="font-mono-tech text-[6px] tracking-[0.25em] text-zinc-700">
-                  ID / KS-001
-                </span>
-
-                <span className="h-8 w-px bg-emerald-400/25" />
-
-                <Activity className="h-3 w-3 text-emerald-400/50" />
-              </div>
-            </div>
-
-            {/* =================================================
-                FLOATING TECH CHIPS
-            ================================================== */}
-
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.55, duration: 0.8 }}
+            <motion.h1
+              initial={{
+                opacity: 0,
+                x: -45,
+              }}
+              animate={{
+                opacity: 1,
+                x: 0,
+              }}
+              transition={{
+                duration: 1,
+                delay: 0.16,
+                ease: [0.16, 1, 0.3, 1],
+              }}
               className="
-                mt-7
-                flex
-                flex-wrap
-                items-center
-                gap-2
+                relative
+                ml-[6vw]
+                mt-2
+                whitespace-nowrap
+                font-display
+                text-[17vw]
+                font-black
+                leading-[0.68]
+                tracking-[-0.085em]
+                text-transparent
+                [-webkit-text-stroke:1px_rgba(255,255,255,0.62)]
+                sm:text-[15vw]
+                lg:ml-[4vw]
+                lg:text-[9.1vw]
               "
             >
-              {[
-                { label: 'SQL', icon: Database },
-                { label: 'PYTHON', icon: Braces },
-                { label: 'POWER BI', icon: BarChart3 },
-                { label: 'EXCEL', icon: Terminal },
-              ].map(({ label, icon: Icon }, index) => (
-                <motion.div
-                  key={label}
-                  whileHover={{ y: -3 }}
-                  transition={{ duration: 0.2 }}
-                  className="
-                    flex
-                    items-center
-                    gap-2
-                    border
-                    border-white/[0.07]
-                    bg-white/[0.015]
-                    px-3
-                    py-2
-                    backdrop-blur-sm
-                  "
-                >
-                  <Icon
-                    className={`h-3 w-3 ${
-                      index === 0
-                        ? 'text-emerald-400'
-                        : 'text-zinc-600'
-                    }`}
-                  />
-
-                  <span className="font-mono-tech text-[7px] uppercase tracking-[0.16em] text-zinc-500">
-                    {label}
-                  </span>
-                </motion.div>
-              ))}
-            </motion.div>
+              SINGH
+            </motion.h1>
 
             {/* =================================================
-                ROLE + DESCRIPTION
+                ROLE + PLAY INTRO + DESCRIPTION
             ================================================== */}
 
             <motion.div
@@ -542,19 +276,21 @@ export const Hero: React.FC<HeroProps> = ({
               }}
               transition={{
                 duration: 0.8,
-                delay: 0.65,
+                delay: 0.35,
               }}
               className="
-                mt-7
+                mt-9
                 flex
                 flex-col
                 gap-5
-                sm:mt-9
+                sm:mt-12
                 sm:flex-row
                 sm:items-center
                 sm:gap-7
               "
             >
+              {/* ROLE */}
+
               <div className="shrink-0">
                 <div
                   className="
@@ -571,22 +307,162 @@ export const Hero: React.FC<HeroProps> = ({
                   Data Analyst
                 </div>
 
-                <div
+                {/* PLAY INTRO — TECH STYLE */}
+
+                <motion.button
+                  type="button"
+                  onClick={playIntro}
+                  whileHover="hover"
+                  whileTap={{ scale: 0.97 }}
+                  initial="initial"
+                  variants={{
+                    initial: {
+                      opacity: 1,
+                    },
+                    hover: {
+                      opacity: 1,
+                    },
+                  }}
                   className="
-                    mt-2
-                    font-mono-tech
-                    text-[7px]
-                    uppercase
-                    tracking-[0.25em]
-                    text-zinc-600
-                    sm:text-[8px]
+                    group
+                    relative
+                    mt-4
+                    flex
+                    h-9
+                    items-center
+                    overflow-hidden
+                    border
+                    border-emerald-400/25
+                    bg-emerald-400/[0.025]
+                    px-3
+                    transition-all
+                    duration-300
+                    hover:border-emerald-400/60
+                    hover:bg-emerald-400/[0.07]
+                    hover:shadow-[0_0_30px_-10px_rgba(52,211,153,.6)]
                   "
                 >
-                  SQL / PYTHON / POWER BI / EXCEL / TABLEAU
-                </div>
+                  {/* Left play block */}
+
+                  <span
+                    className="
+                      relative
+                      flex
+                      h-full
+                      w-8
+                      items-center
+                      justify-center
+                      border-r
+                      border-emerald-400/20
+                      text-emerald-400
+                    "
+                  >
+                    <Play
+                      className="
+                        h-3
+                        w-3
+                        fill-current
+                        transition-transform
+                        duration-300
+                        group-hover:scale-110
+                      "
+                    />
+
+                    {/* tiny scanning line */}
+                    <motion.span
+                      variants={{
+                        initial: {
+                          opacity: 0,
+                          y: 10,
+                        },
+                        hover: {
+                          opacity: 1,
+                          y: 0,
+                        },
+                      }}
+                      transition={{
+                        duration: 0.25,
+                      }}
+                      className="
+                        absolute
+                        bottom-0
+                        left-0
+                        h-px
+                        w-full
+                        bg-emerald-400
+                      "
+                    />
+                  </span>
+
+                  {/* Text */}
+
+                  <span
+                    className="
+                      px-3
+                      font-mono-tech
+                      text-[8px]
+                      font-bold
+                      uppercase
+                      tracking-[0.22em]
+                      text-zinc-300
+                      transition-colors
+                      group-hover:text-white
+                    "
+                  >
+                    PLAY INTRO
+                  </span>
+
+                  {/* Status dot */}
+
+                  <span
+                    className="
+                      ml-1
+                      h-1.5
+                      w-1.5
+                      rounded-full
+                      bg-emerald-400/60
+                      shadow-[0_0_8px_rgba(52,211,153,.45)]
+                      transition-all
+                      group-hover:bg-emerald-300
+                      group-hover:shadow-[0_0_12px_rgba(52,211,153,.8)]
+                    "
+                  />
+
+                  {/* Hover scan */}
+
+                  <motion.span
+                    variants={{
+                      initial: {
+                        left: '-100%',
+                      },
+                      hover: {
+                        left: '100%',
+                      },
+                    }}
+                    transition={{
+                      duration: 0.7,
+                      ease: 'easeInOut',
+                    }}
+                    className="
+                      pointer-events-none
+                      absolute
+                      top-0
+                      h-px
+                      w-16
+                      bg-gradient-to-r
+                      from-transparent
+                      via-emerald-400
+                      to-transparent
+                    "
+                  />
+                </motion.button>
               </div>
 
-              <div className="hidden h-10 w-px bg-white/10 sm:block" />
+              {/* Divider */}
+
+              <div className="hidden h-16 w-px bg-white/10 sm:block" />
+
+              {/* Description */}
 
               <p
                 className="
@@ -617,7 +493,7 @@ export const Hero: React.FC<HeroProps> = ({
               }}
               transition={{
                 duration: 0.8,
-                delay: 0.8,
+                delay: 0.48,
               }}
               className="
                 mt-8
@@ -628,6 +504,8 @@ export const Hero: React.FC<HeroProps> = ({
                 sm:mt-10
               "
             >
+              {/* Explore */}
+
               <button
                 type="button"
                 onClick={onExploreClick}
@@ -664,6 +542,8 @@ export const Hero: React.FC<HeroProps> = ({
                 />
               </button>
 
+              {/* Let's Talk */}
+
               <button
                 type="button"
                 onClick={onConnectClick}
@@ -690,6 +570,8 @@ export const Hero: React.FC<HeroProps> = ({
               >
                 Let's Talk
               </button>
+
+              {/* Socials */}
 
               <div className="ml-1 flex items-center gap-2">
                 <a
@@ -774,6 +656,7 @@ export const Hero: React.FC<HeroProps> = ({
             "
           >
             {/* Large ghost DATA */}
+
             <div
               className="
                 pointer-events-none
@@ -797,6 +680,7 @@ export const Hero: React.FC<HeroProps> = ({
             </div>
 
             {/* Emerald atmospheric glow */}
+
             <div
               className="
                 pointer-events-none
@@ -813,27 +697,8 @@ export const Hero: React.FC<HeroProps> = ({
               "
             />
 
-            {/* right side technical labels */}
-            <div
-              className="
-                pointer-events-none
-                absolute
-                right-[-2%]
-                top-[23%]
-                hidden
-                flex-col
-                gap-3
-                lg:flex
-              "
-            >
-              <span className="font-mono-tech text-[6px] tracking-[0.35em] text-zinc-700 [writing-mode:vertical-rl]">
-                SQL // PYTHON // BI
-              </span>
+            {/* Actual video */}
 
-              <span className="h-20 w-px bg-gradient-to-b from-emerald-400/40 to-transparent" />
-            </div>
-
-            {/* actual video */}
             <div
               className="
                 relative
@@ -847,6 +712,7 @@ export const Hero: React.FC<HeroProps> = ({
           </motion.div>
 
           {/* Giant background number */}
+
           <div
             className="
               pointer-events-none
